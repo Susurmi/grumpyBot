@@ -1,15 +1,15 @@
 {
-  "name": "V12-Bot",
+  "name": "grumpyBot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Ein Discord Bot Projekt",
   "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon bot.js",
     "start": "node bot.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [bot, discord, grumpy],
+  "author": "https://github.com/Susurmi",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.3"
