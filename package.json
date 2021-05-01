@@ -1,17 +1,21 @@
 {
   "name": "grumpyBot",
-  "version": "1.0.0",
-  "description": "Ein Discord Bot Projekt",
+  "version": "2.0.0",
+  "description": "a bot for my Discord Server",
   "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon bot.js",
-    "start": "node bot.js"
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
   },
-  "keywords": [bot, discord, grumpy],
-  "author": "https://github.com/Susurmi",
+  "keywords": ["Discord", "Bot", "DiscordBot", "discordBot"],
+  "author": "Alexander Surmann",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "ansi-colors": "^4.1.1",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1",
+    "table": "^6.6.0"
   }
 }

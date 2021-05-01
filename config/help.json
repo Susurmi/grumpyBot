@@ -1,5 +1,0 @@
-{
-    "CMD" : {
-        "cmdDescription" : "```Diese Befehle sind in der aktuellen Version verfügbar: \n\n?würfeln - Würfel einen normalen 6 seitigen Würfel \n?random - Generiert eine zufällige Zahl zwischen 1 und 10 \n?role [Rolle] - füge dich einer Rolle hinzu. \n?delrole [Rolle] - Entferne eine deiner Rollen. \n\n(Diese Nachricht löscht sich nach 30 Sekunden.)```"
-    }
-}
