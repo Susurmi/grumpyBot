@@ -8,13 +8,20 @@
     "start": "node bot.js",
     "dev": "nodemon bot.js"
   },
-  "keywords": ["Discord", "Bot", "DiscordBot", "discordBot"],
+  "keywords": [
+    "Discord",
+    "Bot",
+    "DiscordBot",
+    "discordBot"
+  ],
   "author": "Alexander Surmann",
   "license": "ISC",
   "dependencies": {
     "ansi-colors": "^4.1.1",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
+    "mongoose": "^5.12.7",
+    "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
     "table": "^6.6.0"
   }
