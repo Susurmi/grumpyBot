@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const Token = require('../models/token.js');
 const ID = process.env.TWITCH_CLIENT_ID;
 const secret = process.env.TWITCH_CLIENT_SECRET;
+const Streamer = require('../models/streamer.js');
 
 const getOAuthToken = async () => {
     const data = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${ID}&client_secret=${secret}&grant_type=client_credentials`, {
@@ -29,7 +30,7 @@ const checkTwitchToken = async () => {
     return token._id;
 };
 
-const getStreamerID = async (name) => {
+const getChannelData = async (name) => {
     const tokenID = await checkTwitchToken();
     const currentToken = await Token.findById(tokenID);
     const data = await fetch(`https://api.twitch.tv/helix/search/channels?query=${name}`, { 
@@ -42,24 +43,26 @@ const getStreamerID = async (name) => {
      .then(res => res.json())
      .catch(err => console.log(err))
      return data;
-}
+};
 
-const searchDB = async () => {
-    const streamerDB = await Streamer.findOne({ description: 'Streamerliste' }, async (err, docs) => {
-        if(err){
-            console.log(err);
-            return;
+const getStreamData = async (broadcaster) => {
+    const tokenID = await checkTwitchToken();
+    const currentToken = await Token.findById(tokenID);
+    const data = await fetch(`https://api.twitch.tv/helix/streams?user_login=${broadcaster}`, { 
+        method: 'GET',
+        headers: {
+            'Client-ID' : ID,
+            'Authorization' : 'Bearer ' + currentToken.token
         }
-    })
+     })
+     .then(res => res.json())
+     .catch(err => console.log(err))
 
-    if(streamerDB === null){
-        const newDB = await Streamer.create({       
-        description: 'Streamerliste',
-        streamer:[]
-        })
-        return newDB._id;
-    }
-    return streamerDB._id;
-}
+     if(data.status = "401"){
+         console.log('Invalid OAuthToken please renew!')
+         return;
+     }
+     return data;
+};
 
-module.exports = { checkTwitchToken, getOAuthToken, getStreamerID, searchDB  };
+module.exports = { checkTwitchToken, getOAuthToken, getChannelData, getStreamData };

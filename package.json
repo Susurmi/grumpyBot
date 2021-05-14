@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "ansi-colors": "^4.1.1",
+    "cron": "^1.8.2",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "mongoose": "^5.12.7",

@@ -1,12 +1,11 @@
-const cron = require('node-cron');
-const fetch = require('node-fetch');
+const CronJob = require('cron').CronJob;
 const { checkTwitchToken,  getOAuthToken} = require('./getTwitch.js');
 const Token = require('../models/token.js');
-const ID = process.env.TWITCH_CLIENT_ID;
+const livestream_channelID = process.env.LIVESTREAM_CHANNEL_ID;
+const Streamer = require('../models/streamer.js');
+const { getStreamData } = require('./getTwitch');
 
-
-const renewOAuth = async () => {
-    cron.schedule('*/30 * * * *', async () => {
+const renewOAuth = new CronJob('*/30 * * * *', async () => {
         const newToken = await getOAuthToken();
         const tokenID = await checkTwitchToken();
 
@@ -18,23 +17,73 @@ const renewOAuth = async () => {
 
         console.log('*** Neuen Token in die Datenbank gespeichert ***')
       }); 
-};
 
-const checkTwitch = async () => {
-    cron.schedule('*/10 * * * *', async () => {
-    const tokenID = await checkTwitchToken();
-    const currentToken = await Token.findById(tokenID);
-    const data = await fetch("https://api.twitch.tv/helix/search/channels?query=ShuFFI_e", { 
-        method: 'GET',
-        headers: {
-            'Client-ID' : ID,
-            'Authorization' : 'Bearer ' + currentToken.token
-        }
-     })
-        .then(res => res.json())
-        .catch(err => console.log(err))
-    return console.log(data);
-    })
-}
+const checkTwitch = async (client) => {
+    const discord = client;
+    const streamCheck = new CronJob('*/5 * * * *', async (client = discord) => {
+
+        const broadcastList = await Streamer.find({broadcaster: String});
+            broadcastList.forEach(async (element, index) => {
+            const streamer = element.name;
+            const data = await getStreamData(streamer);
+            const StreamData = data.data[0];
+            if(StreamData === undefined){
+                await Streamer.findByIdAndUpdate(element._id,
+                    {
+                        msgID: "false"
+                    })
+                    return;
+            };
+            let live = {
+                "title": `🔴 ${StreamData.user_name} ist jetzt live`,
+                "description": StreamData.title,
+                "url": `https://www.twitch.tv/${StreamData.user_login}`,
+                "color": 6570404,
+                "fields": [
+                    {
+                        "name": "Spielt:",
+                        "value": StreamData.game_name,
+                        "inline": true
+                    },
+                    {
+                        "name": "Zuschauer:",
+                        "value": StreamData.viewer_count,
+                        "inline": true
+                    },
+                    {
+                        "name": "Twitch:",
+                        "value": `(https://www.twitch.tv/${StreamData.user_login})`
+                    },
+                ],
+                "footer": {
+                    "text": 'grumpyBot by Susurmi'
+                },
+                "image": {
+                    "url": `https://static-cdn.jtvnw.net/previews-ttv/live_user_${StreamData.user_login}-640x360.jpg?cacheBypass=${(Math.random()).toString()}`
+                },
+                "thumbnail": {
+                    "url": `${StreamData.thumbnail_url}`
+                }
+            }; 
+            const msgCheck = await Streamer.findById(element._id)
+            if(msgCheck.msgID === "false"){ 
+                await client.channels.cache.get(livestream_channelID).send({embed: live})
+                .then(msg = async (msg) => {
+                    await Streamer.findByIdAndUpdate(element._id,
+                        {
+                            msgID: msg.id
+                        })})
+                return;
+            }else{
+                await client.channels.cache.get(livestream_channelID).messages.fetch(msgCheck.msgID)
+                    .then(m => {
+                        const fetchedMsg = m;
+                        fetchedMsg.edit({embed: live});
+                    });
+                    return;
+            }});
+        })
+    streamCheck.start();
+};
 
 module.exports = { renewOAuth, checkTwitch };

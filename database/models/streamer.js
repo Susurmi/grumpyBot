@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const streamerSchema = new mongoose.Schema({
-    description: mongoose.SchemaTypes.String,
-    streamer: mongoose.SchemaTypes.Array
+    name: mongoose.SchemaTypes.String,
+    msgID: mongoose.SchemaTypes.String
 })
 
 module.exports = mongoose.model('streamer', streamerSchema);
