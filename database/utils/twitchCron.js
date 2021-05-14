@@ -20,7 +20,7 @@ const renewOAuth = new CronJob('*/30 * * * *', async () => {
 
 const checkTwitch = async (client) => {
     const discord = client;
-    const streamCheck = new CronJob('* * * * *', async (client = discord) => {
+    const streamCheck = new CronJob('*/5 * * * *', async (client = discord) => {
 
         const broadcastList = await Streamer.find({broadcaster: String});
             broadcastList.forEach(async (element, index) => {
