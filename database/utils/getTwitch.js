@@ -57,11 +57,7 @@ const getStreamData = async (broadcaster) => {
      })
      .then(res => res.json())
      .catch(err => console.log(err))
-
-     if(data.status = "401"){
-         console.log('Invalid OAuthToken please renew!')
-         return;
-     }
+     
      return data;
 };
 
