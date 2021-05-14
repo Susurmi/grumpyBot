@@ -20,7 +20,7 @@ const renewOAuth = new CronJob('*/30 * * * *', async () => {
 
 const checkTwitch = async (client) => {
     const discord = client;
-    const streamCheck = new CronJob('*/5 * * * *', async (client = discord) => {
+    const streamCheck = new CronJob('* * * * *', async (client = discord) => {
 
         const broadcastList = await Streamer.find({broadcaster: String});
             broadcastList.forEach(async (element, index) => {
@@ -62,7 +62,7 @@ const checkTwitch = async (client) => {
                     "url": `https://static-cdn.jtvnw.net/previews-ttv/live_user_${StreamData.user_login}-640x360.jpg?cacheBypass=${(Math.random()).toString()}`
                 },
                 "thumbnail": {
-                    "url": `${StreamData.thumbnail_url}`
+                    "url": element.pic
                 }
             }; 
             const msgCheck = await Streamer.findById(element._id)

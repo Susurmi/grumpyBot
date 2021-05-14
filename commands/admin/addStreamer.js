@@ -13,11 +13,12 @@ module.exports = {
                 if( name === args.toLowerCase()){
                     const newStreamer = await Streamer.create({
                         name: element.broadcaster_login,
-                        msgID: "false"
+                        msgID: "false",
+                        pic: element.thumbnail_url
                     })
                     return element;
                 }else{
-
+                    message.channel.send('Kanal nicht gefunden.')
                     return;
                 }
             });
