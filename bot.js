@@ -8,7 +8,7 @@ const { mongoDB } = require('./database/database.js');
 (async () => {
     await mongoDB();
     await startSchedule(client);
-    client.login(process.env.TEST_TOKEN);
+    client.login(process.env.BOT_TOKEN);
     client.commands = new Map();
     client.cachedMessageReactions = new Map();
     await registerEvents(client, '../events');
