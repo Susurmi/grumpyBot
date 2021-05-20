@@ -1,7 +1,9 @@
-module.exports = (client, message) => {
+const discord = require('discord.js');
+
+module.exports = (client, member) => {
         console.log("+ " + member.user.tag + "ist dem Server beigetreten.");
         let { cache } = member.guild.roles;
-        let role = cache.find(role => role.name === "Mitglied");
+        let role = cache.find(process.env.BASE_ROLE_ID);
         member.roles.add(role); // Adds the default role to members
     
         const welcomeMessage = new discord.MessageEmbed()
@@ -12,7 +14,7 @@ module.exports = (client, message) => {
             .setTimestamp()
             .setFooter('grumpyBot by Susurmi');
     
-        member.guild.channels.cache.find(i => i.name.toLowerCase() === 'willkommen').send(welcomeMessage);
+        member.guild.channels.cache.find(process.env.WELCOME_CHANNEL_ID).send(welcomeMessage);
     };
     
     module.exports.description = "Neues Server Mitglied" ;
